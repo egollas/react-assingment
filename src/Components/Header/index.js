@@ -4,6 +4,17 @@ import { Navbar, FormControl, Button, Modal, Form, Col } from "react-bootstrap";
 import "./style.css";
 
 const AddModal = (props) => {
+  const [title, setTitle] = useState('')
+  const [body, setBody] = useState('')
+  const handleChangeTitle = (event) => {
+    setTitle(event.target.value)
+  }
+  const handleChangeBody = (event) => {
+    setBody(event.target.value)
+  }
+  const AddArticle = () => {
+    console.log({title, body})
+  }
   return (
     <Modal
       {...props}
@@ -20,28 +31,30 @@ const AddModal = (props) => {
         <Form>
           <Form.Row controlId="title" className='searchContainer'>
             <Form.Label>title</Form.Label>
-            <Form.Control placeholder="Enter Title ..." />
+            <Form.Control placeholder="Enter Title ..." onChange={handleChangeTitle} />
           </Form.Row>
           <Form.Row controlId="body" className='searchContainer'>
             <Form.Label>body</Form.Label>
-            <Form.Control placeholder="Enter Body..." type='text' as="textarea" size='sm' />
+            <Form.Control placeholder="Enter Body..." type='text' as="textarea" size='sm' onChange={handleChangeBody} />
           </Form.Row>
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={() => alert("connet API")}>Add</Button>
+        <Button onClick={AddArticle}>Add</Button>
         <Button onClick={props.onHide}>Cancel</Button>
       </Modal.Footer>
     </Modal>
   );
 };
 
-const handleSearchTerm = (e) => {
-  console.log(e);
-};
-
-const Header = () => {
+const Header = ({onSearch}) => {
   const [modalShow, setModalShow] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const handleSearchTerm = (e) => {
+    setSearchTerm(e.target.value)
+  };
+
   return (
     <>
       <Navbar sticky="top" variant="dark" bg="dark" className="searchContainer">
@@ -49,12 +62,12 @@ const Header = () => {
           type="text"
           placeholder="Search"
           className="mr-sm-2"
-          onKeyPress={(e) => handleSearchTerm(e)}
+          onChange={handleSearchTerm}
         />
         <Button
           variant="outline-warning"
           className="buttonBase"
-          onClick={() => alert("Search Article")}
+          onClick={()=>onSearch(searchTerm)}
         >
           Search
         </Button>

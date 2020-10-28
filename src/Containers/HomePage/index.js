@@ -1,19 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Container } from "react-bootstrap";
 
-import ArticleCard  from '../../Components/ArticleCard'
-import Header  from '../../Components/Header'
+import ArticleCard from "../../Components/ArticleCard";
+import Header from "../../Components/Header";
 
-// import { allArticles } from '../../Services/ArticlesAPI'
-import allArticles  from '../../articles.json'
+import { allArticles } from "../../Services/ArticlesAPI";
 
 const HomePage = () => {
-  // const articles = allArticles()
-  console.log( allArticles)
+  const [articles, setArticles] = useState({data: []});
+
+  const getArticles = (searchTerm) => {
+    allArticles(searchTerm)
+      .then((res) => {
+        setArticles({...res})
+      })
+      .catch((err) => err);
+  }
+
+  useEffect(() => {
+    getArticles()
+  }, []);
+
   return (
     <Container>
-      <Header />
-      {allArticles.map((item, idx) => <ArticleCard key={idx} {...item} />)}
+      <Header onSearch={getArticles} />
+      {articles.data.map((item, idx) => (
+        <ArticleCard key={idx} {...item} />
+      ))}
     </Container>
   );
 };
